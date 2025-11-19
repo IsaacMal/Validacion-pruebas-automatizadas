@@ -8,13 +8,17 @@ __pycache__/
 *$py.class
 .DS_Store
 Thumbs.db
-
-# --- Entorno virtual ---
+# --- Entornos virtuales (todas las variantes) ---
 venv/
 env/
 .venv/
 ENV/
 env.bak/
+virtualenv/
+**/venv/
+**/.venv/
+**/env/
+**/ENV/
 
 # --- Archivos de configuración local ---
 *.env
