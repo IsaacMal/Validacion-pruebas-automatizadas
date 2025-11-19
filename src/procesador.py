@@ -49,3 +49,53 @@ class Analizador:
             return totales[nombre]
         else:
             return 0.0
+
+
+    #Exportaciones totales por mes: sumar EXPORTACIONES agrupadas por MES.
+    def exportaciones_totales_por_mes(self):
+        """Suma las exportaciones agrupadas por MES."""
+        totales = {}
+        for fila in self.datos:
+            mes = fila.get("MES")
+            valor = float(fila.get("EXPORTACIONES", 0))
+            totales[mes] = totales.get(mes, 0) + valor
+        return totales
+
+
+    #Porcentaje de ventas con tarifa 0% respecto al total: calcular promedio de (VENTAS_NETAS_TARIFA_0 / TOTAL_VENTAS) * 100 por provincia o sector.
+    def porcentaje_ventas_tarifa_0(self):
+        """
+        Calcula (VENTAS_NETAS_TARIFA_0 / TOTAL_VENTAS) * 100
+        y devuelve el promedio por PROVINCIA.
+        """
+        acumulado = {}
+        conteo = {}
+
+        for fila in self.datos:
+            prov = fila.get("PROVINCIA")
+            tarifa0 = float(fila.get("VENTAS_NETAS_TARIFA_0", 0))
+            total = float(fila.get("TOTAL_VENTAS", 0))
+
+            if total == 0:
+                continue
+
+            porcentaje = (tarifa0 / total) * 100
+            acumulado[prov] = acumulado.get(prov, 0) + porcentaje
+            conteo[prov] = conteo.get(prov, 0) + 1
+
+        return {p: acumulado[p] / conteo[p] for p in acumulado}
+    
+
+    #Provincia con mayor volumen de importaciones: identificar la provincia con el mayor total de IMPORTACIONES.
+    def provincia_mayor_importacion(self):
+        """Devuelve la provincia que tiene mayor total de IMPORTACIONES."""
+        totales = {}
+        for fila in self.datos:
+            prov = fila.get("PROVINCIA")
+            valor = float(fila.get("IMPORTACIONES", 0))
+            totales[prov] = totales.get(prov, 0) + valor
+
+        if not totales:
+            return None
+
+        return max(totales, key=totales.get)
